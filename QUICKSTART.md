@@ -2,6 +2,8 @@
 
 Get PersonalCook running on your phones in 5 minutes!
 
+> 📱 **Don't have Node.js?** See the [QR Code Access Guide](QR_CODE_README.md) or [No Node.js Setup](NO_NODE_SETUP.md)
+
 > 📱 **For more detailed instructions and alternative methods, see [MOBILE_SETUP.md](MOBILE_SETUP.md)**
 
 ## Step 1: Install Expo Go

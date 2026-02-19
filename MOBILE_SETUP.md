@@ -4,6 +4,25 @@ This guide will help you install and run PersonalCook on your Android or iOS dev
 
 ---
 
+## 🚨 Don't Have Node.js Installed?
+
+**No problem!** You have several options:
+
+1. **📱 Use Pre-Generated QR Code** → [QR_CODE_README.md](QR_CODE_README.md)
+   - Scan the QR code directly if someone has already published the app
+   - No Node.js required!
+
+2. **📖 Complete No-Node.js Guide** → [NO_NODE_SETUP.md](NO_NODE_SETUP.md)
+   - Detailed instructions for users without Node.js
+   - Alternative deployment methods
+   - How to request a published version
+
+3. **⬇️ Install Node.js** → https://nodejs.org
+   - Recommended if you want to customize the app
+   - Then follow the guides below
+
+---
+
 ## 🎯 Quick Overview
 
 There are **3 ways** to get PersonalCook on your mobile:

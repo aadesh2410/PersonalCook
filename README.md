@@ -5,12 +5,36 @@ A mobile application that acts as your personal daily cook by suggesting what to
 ## 📱 Get It On Your Phone!
 
 **Want to use PersonalCook on your mobile device?**  
+
+### 🚨 Don't Have Node.js?
+👉 **[No Node.js? No Problem! Click Here](NO_NODE_SETUP.md)** - Get the app without installing Node.js!
+
+👉 **[QR Code Access](QR_CODE_README.md)** - Scan a QR code to get started instantly!
+
+### ✅ Have Node.js?
 👉 **[Follow our Mobile Setup Guide](MOBILE_SETUP.md)** for step-by-step instructions!
 
 Three easy options:
 - ⚡ **Expo Go** (5 minutes, FREE) - Fastest way to get started
 - 🚀 **Standalone App** (30 minutes, FREE) - No Expo Go needed
 - 🏪 **App Stores** (2-7 days, $25-$99) - Public distribution
+
+---
+
+## 🎁 QR Code Quick Access
+
+Want to try the app right now? Check if there's a QR code available:
+
+👉 **[View QR Code](QR_CODE_README.md)**
+
+If a QR code is available, you can:
+1. Install Expo Go on your phone
+2. Scan the QR code
+3. Start using PersonalCook immediately!
+
+No computer setup needed! 📱
+
+---
 
 ## Features
 
@@ -48,6 +72,8 @@ Three easy options:
 - **UI**: Native React Native components
 
 ## Installation & Setup
+
+> 💡 **Don't have Node.js installed?** See [NO_NODE_SETUP.md](NO_NODE_SETUP.md) for alternative ways to get the app!
 
 ### Prerequisites
 
