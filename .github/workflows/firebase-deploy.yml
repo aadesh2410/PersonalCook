@@ -7,10 +7,15 @@ name: Build and Deploy to Firebase
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build-android:
     name: Build Android APK
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout repository
@@ -96,6 +101,8 @@ jobs:
     name: Deploy to Firebase App Distribution
     needs: build-android
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout repository
