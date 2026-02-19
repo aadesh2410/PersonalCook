@@ -1,5 +1,7 @@
 # PersonalCook 🍳
 
+[![Build and Deploy](https://github.com/aadesh2410/PersonalCook/actions/workflows/firebase-deploy.yml/badge.svg)](https://github.com/aadesh2410/PersonalCook/actions/workflows/firebase-deploy.yml)
+
 A mobile application that acts as your personal daily cook by suggesting what to prepare every day. Designed for Indian families (Maharashtrian cuisine), this app helps you decide on breakfast, lunch, and dinner with intelligent recommendations.
 
 ## 📱 Get It On Your Phone!

@@ -1,6 +1,7 @@
+---
 name: Build and Deploy to Firebase
 
-on:
+'on':
   push:
     branches:
       - main
@@ -10,7 +11,7 @@ jobs:
   build-android:
     name: Build Android APK
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,7 +33,9 @@ jobs:
         run: npm ci
 
       - name: Build Android APK
-        run: eas build --platform android --profile production --non-interactive --no-wait
+        run: >
+          eas build --platform android --profile production
+          --non-interactive --no-wait
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
@@ -41,32 +44,36 @@ jobs:
         run: |
           echo "Waiting for EAS build to complete..."
           # Get the latest build ID for Android
-          BUILD_ID=$(eas build:list --platform android --limit 1 --json --non-interactive | jq -r '.[0].id')
+          BUILD_ID=$(eas build:list --platform android --limit 1 \
+            --json --non-interactive | jq -r '.[0].id')
           echo "Build ID: $BUILD_ID"
-          
+
           # Wait for build to complete (max 30 minutes)
           TIMEOUT=1800
           ELAPSED=0
           INTERVAL=30
-          
+
           while [ $ELAPSED -lt $TIMEOUT ]; do
-            STATUS=$(eas build:view $BUILD_ID --json --non-interactive | jq -r '.status')
+            STATUS=$(eas build:view $BUILD_ID --json \
+              --non-interactive | jq -r '.status')
             echo "Build status: $STATUS (${ELAPSED}s elapsed)"
-            
+
             if [ "$STATUS" = "finished" ]; then
               echo "Build completed successfully!"
-              BUILD_URL=$(eas build:view $BUILD_ID --json --non-interactive | jq -r '.artifacts.buildUrl')
+              BUILD_URL=$(eas build:view $BUILD_ID --json \
+                --non-interactive | jq -r '.artifacts.buildUrl')
               echo "build_url=$BUILD_URL" >> $GITHUB_OUTPUT
               exit 0
-            elif [ "$STATUS" = "errored" ] || [ "$STATUS" = "canceled" ]; then
+            elif [ "$STATUS" = "errored" ] \
+              || [ "$STATUS" = "canceled" ]; then
               echo "Build failed with status: $STATUS"
               exit 1
             fi
-            
+
             sleep $INTERVAL
             ELAPSED=$((ELAPSED + INTERVAL))
           done
-          
+
           echo "Build timeout after ${TIMEOUT}s"
           exit 1
         env:
@@ -74,7 +81,8 @@ jobs:
 
       - name: Download APK
         run: |
-          curl -L -o PersonalCook.apk "${{ steps.wait-build.outputs.build_url }}"
+          curl -L -o PersonalCook.apk \
+            "${{ steps.wait-build.outputs.build_url }}"
           ls -lh PersonalCook.apk
 
       - name: Upload APK artifact
@@ -88,7 +96,7 @@ jobs:
     name: Deploy to Firebase App Distribution
     needs: build-android
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -102,16 +110,17 @@ jobs:
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
-          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          serviceCredentialsFileContent: >
+            ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           groups: testers
           file: PersonalCook.apk
           releaseNotes: |
             Automated build from commit: ${{ github.sha }}
-            
+
             Changes in this release:
             ${{ github.event.head_commit.message }}
 
       - name: Deployment success
         run: |
-          echo "✅ APK successfully deployed to Firebase App Distribution!"
-          echo "Users in the 'testers' group will receive a notification to download the app."
+          echo "✅ APK deployed to Firebase App Distribution!"
+          echo "Testers will receive a notification to download."
