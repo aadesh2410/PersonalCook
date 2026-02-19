@@ -4,13 +4,21 @@ A mobile application that acts as your personal daily cook by suggesting what to
 
 ## 📱 Get It On Your Phone!
 
-**Want to use PersonalCook on your mobile device?**  
-👉 **[Follow our Mobile Setup Guide](MOBILE_SETUP.md)** for step-by-step instructions!
+**Want to use PersonalCook on your mobile device?**
 
-Three easy options:
-- ⚡ **Expo Go** (5 minutes, FREE) - Fastest way to get started
-- 🚀 **Standalone App** (30 minutes, FREE) - No Expo Go needed
-- 🏪 **App Stores** (2-7 days, $25-$99) - Public distribution
+### 🔥 Recommended: Firebase Deployment (NEW!)
+- **For Users**: [How to Install the App](HOW_TO_INSTALL.md) - Just download and install!
+- **For Admins**: [Firebase Setup Guide](FIREBASE_SETUP.md) - One-time automated setup
+
+**Benefits:**
+- ✅ Fully automated builds and deployments
+- ✅ Download directly to your phone (no Expo Go needed)
+- ✅ Automatic updates when code changes
+- ✅ 100% FREE with no manual intervention
+
+### Alternative Options:
+- ⚡ **Expo Go** (5 minutes, FREE) - See [Mobile Setup Guide](MOBILE_SETUP.md)
+- 🏪 **App Stores** (2-7 days, $25-$99) - See [Deployment Guide](DEPLOYMENT.md)
 
 ## Features
 
@@ -103,25 +111,36 @@ Three easy options:
 
 ## Deployment
 
-📱 **For detailed mobile deployment instructions, see [MOBILE_SETUP.md](MOBILE_SETUP.md)**
+### 🔥 Automated Firebase Deployment (Recommended)
 
-### For Personal Use (Recommended)
+**Complete automated deployment with zero manual intervention!**
 
-**Option 1: Expo Go App (Easiest)**
-- Both users install Expo Go from App Store/Play Store
-- Share the app link or QR code from `npm start`
-- Scan and use the app directly
+See the [Firebase Setup Guide](FIREBASE_SETUP.md) for detailed instructions.
 
-**Option 2: Development Build**
-```bash
-# Build for iOS
-npx expo build:ios
+**Quick Overview:**
+1. Set up Firebase project (one-time, 10 minutes)
+2. Configure GitHub secrets (one-time, 5 minutes)
+3. Push code to `main` branch
+4. GitHub Actions automatically builds and deploys APK
+5. Users receive download links via email
+6. **No manual steps needed for future deployments!**
 
-# Build for Android
-npx expo build:android
-```
+**Benefits:**
+- ✅ 100% automated build and deployment
+- ✅ FREE (Firebase + GitHub Actions + EAS free tier)
+- ✅ Direct APK download (no Expo Go needed)
+- ✅ Automatic notifications to testers
+- ✅ Version control and release history
 
-**Option 3: Expo Application Services (EAS)**
+### Alternative Deployment Methods
+
+📱 **For other deployment methods, see [MOBILE_SETUP.md](MOBILE_SETUP.md) and [DEPLOYMENT.md](DEPLOYMENT.md)**
+
+**Option 1: Expo Go App**
+- Quick testing, requires Expo Go app
+- See [MOBILE_SETUP.md](MOBILE_SETUP.md)
+
+**Option 2: Manual EAS Build**
 ```bash
 # Install EAS CLI
 npm install -g eas-cli
@@ -129,21 +148,14 @@ npm install -g eas-cli
 # Configure EAS
 eas build:configure
 
-# Build for both platforms
-eas build --platform all
+# Build for Android
+eas build --platform android --profile production
 ```
 
-### For App Store/Play Store (Advanced)
-
-1. **iOS (App Store)**
-   - Requires Apple Developer account ($99/year)
-   - Build with EAS: `eas build --platform ios`
-   - Submit: `eas submit --platform ios`
-
-2. **Android (Play Store)**
-   - Requires Google Play Developer account ($25 one-time)
-   - Build with EAS: `eas build --platform android`
-   - Submit: `eas submit --platform android`
+**Option 3: App Store/Play Store Distribution**
+- For public distribution
+- See [DEPLOYMENT.md](DEPLOYMENT.md) for details
+- Requires developer accounts ($25-$99)
 
 ## Project Structure
 
