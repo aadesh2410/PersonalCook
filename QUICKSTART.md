@@ -2,6 +2,8 @@
 
 Get PersonalCook running on your phones in 5 minutes!
 
+> 📱 **For more detailed instructions and alternative methods, see [MOBILE_SETUP.md](MOBILE_SETUP.md)**
+
 ## Step 1: Install Expo Go
 
 ### On Android (Your Wife's Phone):

@@ -2,6 +2,16 @@
 
 A mobile application that acts as your personal daily cook by suggesting what to prepare every day. Designed for Indian families (Maharashtrian cuisine), this app helps you decide on breakfast, lunch, and dinner with intelligent recommendations.
 
+## 📱 Get It On Your Phone!
+
+**Want to use PersonalCook on your mobile device?**  
+👉 **[Follow our Mobile Setup Guide](MOBILE_SETUP.md)** for step-by-step instructions!
+
+Three easy options:
+- ⚡ **Expo Go** (5 minutes, FREE) - Fastest way to get started
+- 🚀 **Standalone App** (30 minutes, FREE) - No Expo Go needed
+- 🏪 **App Stores** (2-7 days, $25-$99) - Public distribution
+
 ## Features
 
 ✨ **Smart Recommendations**
@@ -92,6 +102,8 @@ A mobile application that acts as your personal daily cook by suggesting what to
 - Track your meal variety over time
 
 ## Deployment
+
+📱 **For detailed mobile deployment instructions, see [MOBILE_SETUP.md](MOBILE_SETUP.md)**
 
 ### For Personal Use (Recommended)
 

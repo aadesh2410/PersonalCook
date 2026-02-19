@@ -2,6 +2,9 @@
 
 This guide will help you deploy the PersonalCook app so both you and your wife can use it on your phones (iOS and Android).
 
+> 📱 **For a comprehensive, user-friendly mobile setup guide, see [MOBILE_SETUP.md](MOBILE_SETUP.md)**  
+> This guide contains the same information with more detailed explanations and troubleshooting.
+
 ## Quick Start (Easiest Method)
 
 ### Using Expo Go App
