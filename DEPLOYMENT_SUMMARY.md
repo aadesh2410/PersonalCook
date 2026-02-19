@@ -100,13 +100,13 @@ I've created a comprehensive guide with step-by-step instructions:
 
 | Task | Time Required |
 |------|---------------|
-| Create Firebase project | 5 minutes |
+| Create Firebase project | 10 minutes |
 | Set up App Distribution | 5 minutes |
 | Create Expo account/token | 5 minutes |
 | Add GitHub secrets | 5 minutes |
-| **Initial Setup Total** | **~20 minutes** |
-| First build (automated) | 15-25 minutes |
-| **Total Time to APK** | **~40-45 minutes** |
+| **Initial Setup Total** | **~25 minutes** |
+| First build (automated) | 20-25 minutes |
+| **Total Time to APK** | **~50 minutes** |
 
 ## Important Notes 📝
 

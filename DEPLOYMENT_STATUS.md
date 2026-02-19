@@ -201,7 +201,7 @@ Artifacts: Uploaded to GitHub Actions + Firebase
 | Add GitHub secrets | 5 minutes |
 | **Total manual work** | **~25 minutes** |
 | First build (automated) | 20-25 minutes |
-| **Time to first APK** | **~45-50 minutes** |
+| **Time to first APK** | **~50 minutes** |
 
 ---
 
@@ -265,7 +265,7 @@ A: Yes! Run `npm start` and use Expo Go app
 **Current State:** ✅ Repository is fully configured and ready
 **Next Step:** 🔑 You need to add 3 GitHub secrets
 **End Result:** 📱 APK file ready to install on Android devices
-**Time Investment:** ⏱️ ~25 minutes of setup, then fully automated
+**Time Investment:** ⏱️ ~25 minutes of setup + 20-25 minutes build = ~50 minutes total
 **Cost:** 💰 $0 (completely free)
 
 ---
@@ -273,11 +273,12 @@ A: Yes! Run `npm start` and use Expo Go app
 ## 🚀 Quick Start
 
 1. **Read:** [QUICK_START_DEPLOY.md](./QUICK_START_DEPLOY.md)
-2. **Set up:** Firebase + Expo + GitHub Secrets
+2. **Set up:** Firebase + Expo + GitHub Secrets (~25 minutes)
 3. **Trigger:** Push to main or run workflow
-4. **Download:** APK from GitHub Actions or Firebase
-5. **Done!** 🎉
+4. **Wait:** Build completes (~20-25 minutes)
+5. **Download:** APK from GitHub Actions or Firebase
+6. **Done!** 🎉
 
 ---
 
-**Ready to deploy?** You have everything you need! Follow the guides and you'll have your APK in about 45 minutes. Let me know if you need any clarification! 🚀
+**Ready to deploy?** You have everything you need! Follow the guides and you'll have your APK in about 50 minutes. Let me know if you need any clarification! 🚀
