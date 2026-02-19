@@ -131,6 +131,8 @@ No computer setup needed! 📱
 
 📱 **For detailed mobile deployment instructions, see [MOBILE_SETUP.md](MOBILE_SETUP.md)**
 
+🤝 **Want to share the app with others? See [SHARING.md](SHARING.md)**
+
 ### For Personal Use (Recommended)
 
 **Option 1: Expo Go App (Easiest)**
