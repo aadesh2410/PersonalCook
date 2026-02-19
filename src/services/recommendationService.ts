@@ -1,6 +1,8 @@
 // Recommendation algorithm for suggesting meals
 import { FoodItem, MealType, MealHistory } from '../types';
 
+const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
+
 export class RecommendationService {
   /**
    * Get recommendations for a specific meal type
@@ -67,8 +69,7 @@ export class RecommendationService {
    * Calculate the number of days between two dates
    */
   private static getDaysDifference(date1: Date, date2: Date): number {
-    const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
-    return Math.floor(Math.abs((date1.getTime() - date2.getTime()) / oneDay));
+    return Math.floor(Math.abs((date1.getTime() - date2.getTime()) / MILLISECONDS_PER_DAY));
   }
 
   /**

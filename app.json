@@ -23,8 +23,7 @@
         "backgroundColor": "#FF6B35"
       },
       "package": "com.personalcook.app",
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "edgeToEdgeEnabled": true
     },
     "web": {
       "favicon": "./assets/favicon.png"

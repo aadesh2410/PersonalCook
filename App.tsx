@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -33,7 +34,7 @@ export default function App() {
           options={{
             tabBarLabel: 'Recommendations',
             tabBarIcon: ({ color, size }) => (
-              <span style={{ fontSize: size, color }}>🍳</span>
+              <Text style={{ fontSize: size, color }}>🍳</Text>
             ),
           }}
         />
@@ -43,7 +44,7 @@ export default function App() {
           options={{
             tabBarLabel: 'Manage Foods',
             tabBarIcon: ({ color, size }) => (
-              <span style={{ fontSize: size, color }}>📝</span>
+              <Text style={{ fontSize: size, color }}>📝</Text>
             ),
           }}
         />
@@ -53,7 +54,7 @@ export default function App() {
           options={{
             tabBarLabel: 'History',
             tabBarIcon: ({ color, size }) => (
-              <span style={{ fontSize: size, color }}>📅</span>
+              <Text style={{ fontSize: size, color }}>📅</Text>
             ),
           }}
         />
