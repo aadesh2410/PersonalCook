@@ -12,7 +12,7 @@ export class RecommendationService {
     foodItems: FoodItem[],
     mealHistory: MealHistory[],
     mealType: MealType,
-    count: number = 3
+    count: number = 1
   ): FoodItem[] {
     // Filter items suitable for the meal type
     const suitableItems = foodItems.filter((item) =>
@@ -80,9 +80,9 @@ export class RecommendationService {
     mealHistory: MealHistory[]
   ) {
     return {
-      breakfast: this.getRecommendations(foodItems, mealHistory, 'breakfast', 3),
-      lunch: this.getRecommendations(foodItems, mealHistory, 'lunch', 3),
-      dinner: this.getRecommendations(foodItems, mealHistory, 'dinner', 3),
+      breakfast: this.getRecommendations(foodItems, mealHistory, 'breakfast', 1),
+      lunch: this.getRecommendations(foodItems, mealHistory, 'lunch', 1),
+      dinner: this.getRecommendations(foodItems, mealHistory, 'dinner', 1),
     };
   }
 }

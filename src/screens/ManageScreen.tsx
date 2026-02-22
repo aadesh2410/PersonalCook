@@ -19,6 +19,11 @@ export const ManageScreen: React.FC = () => {
   const [newItemName, setNewItemName] = useState('');
   const [selectedMealTypes, setSelectedMealTypes] = useState<MealType[]>([]);
   const [category, setCategory] = useState('');
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingItem, setEditingItem] = useState<FoodItem | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editMealTypes, setEditMealTypes] = useState<MealType[]>([]);
+  const [editCategory, setEditCategory] = useState('');
 
   useEffect(() => {
     loadData();
@@ -90,12 +95,65 @@ export const ManageScreen: React.FC = () => {
     );
   };
 
+  const handleOpenEdit = (item: FoodItem) => {
+    setEditingItem(item);
+    setEditName(item.name);
+    setEditMealTypes([...item.mealType]);
+    setEditCategory(item.category);
+    setShowEditModal(true);
+  };
+
+  const handleEditItem = async () => {
+    if (!editName.trim()) {
+      Alert.alert('Error', 'Please enter a food name');
+      return;
+    }
+    if (editMealTypes.length === 0) {
+      Alert.alert('Error', 'Please select at least one meal type');
+      return;
+    }
+    if (!editingItem) return;
+
+    try {
+      const updatedItem: FoodItem = {
+        ...editingItem,
+        name: editName.trim(),
+        mealType: editMealTypes,
+        category: editCategory.trim() || editingItem.category,
+      };
+
+      await StorageService.updateFoodItem(updatedItem);
+      Alert.alert('Success', 'Food item updated successfully!');
+
+      setShowEditModal(false);
+      setEditingItem(null);
+      await loadData();
+    } catch (error) {
+      console.error('Error updating food item:', error);
+      Alert.alert('Error', 'Failed to update food item');
+    }
+  };
+
   const toggleMealType = (mealType: MealType) => {
     setSelectedMealTypes((prev) =>
       prev.includes(mealType)
         ? prev.filter((t) => t !== mealType)
         : [...prev, mealType]
     );
+  };
+
+  const toggleEditMealType = (mealType: MealType) => {
+    setEditMealTypes((prev) =>
+      prev.includes(mealType)
+        ? prev.filter((t) => t !== mealType)
+        : [...prev, mealType]
+    );
+  };
+
+  const mealCounts = {
+    breakfast: foodItems.filter((item) => item.mealType.includes('breakfast')).length,
+    lunch: foodItems.filter((item) => item.mealType.includes('lunch')).length,
+    dinner: foodItems.filter((item) => item.mealType.includes('dinner')).length,
   };
 
   return (
@@ -110,6 +168,15 @@ export const ManageScreen: React.FC = () => {
         </TouchableOpacity>
       </View>
 
+      <View style={styles.statsContainer}>
+        <Text style={styles.statsTotal}>Total: {foodItems.length} items</Text>
+        <View style={styles.statsRow}>
+          <Text style={styles.statsBadge}>🌅 Breakfast: {mealCounts.breakfast}</Text>
+          <Text style={styles.statsBadge}>☀️ Lunch: {mealCounts.lunch}</Text>
+          <Text style={styles.statsBadge}>🌙 Dinner: {mealCounts.dinner}</Text>
+        </View>
+      </View>
+
       <ScrollView style={styles.list}>
         {foodItems.map((item) => (
           <View key={item.id} style={styles.itemCard}>
@@ -120,23 +187,39 @@ export const ManageScreen: React.FC = () => {
               </Text>
               <Text style={styles.itemCategory}>{item.category}</Text>
             </View>
-            {item.isCustom && (
+            <View style={styles.itemActions}>
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={() => handleOpenEdit(item)}
+                accessibilityLabel={`Edit ${item.name}`}
+                accessibilityHint="Opens a dialog to edit this food item"
+              >
+                <Text style={styles.editButtonText}>Edit</Text>
+              </TouchableOpacity>
               <TouchableOpacity
                 style={styles.deleteButton}
                 onPress={() => handleDeleteItem(item.id, item.name)}
+                accessibilityLabel={`Delete ${item.name}`}
+                accessibilityHint="Asks for confirmation before deleting this food item"
               >
                 <Text style={styles.deleteButtonText}>Delete</Text>
               </TouchableOpacity>
-            )}
+            </View>
           </View>
         ))}
       </ScrollView>
 
+      {/* Add Item Modal */}
       <Modal
         visible={showAddModal}
         animationType="slide"
         transparent={true}
-        onRequestClose={() => setShowAddModal(false)}
+        onRequestClose={() => {
+          setNewItemName('');
+          setSelectedMealTypes([]);
+          setCategory('');
+          setShowAddModal(false);
+        }}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -183,7 +266,12 @@ export const ManageScreen: React.FC = () => {
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.cancelButton]}
-                onPress={() => setShowAddModal(false)}
+                onPress={() => {
+                  setNewItemName('');
+                  setSelectedMealTypes([]);
+                  setCategory('');
+                  setShowAddModal(false);
+                }}
               >
                 <Text style={styles.cancelButtonText}>Cancel</Text>
               </TouchableOpacity>
@@ -192,6 +280,79 @@ export const ManageScreen: React.FC = () => {
                 onPress={handleAddItem}
               >
                 <Text style={styles.saveButtonText}>Add</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Edit Item Modal */}
+      <Modal
+        visible={showEditModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => {
+          setShowEditModal(false);
+          setEditingItem(null);
+        }}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Edit Food Item</Text>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Food name"
+              value={editName}
+              onChangeText={setEditName}
+            />
+
+            <TextInput
+              style={styles.input}
+              placeholder="Category (e.g., snack)"
+              value={editCategory}
+              onChangeText={setEditCategory}
+            />
+
+            <Text style={styles.label}>Select meal types:</Text>
+            <View style={styles.mealTypeButtons}>
+              {(['breakfast', 'lunch', 'dinner'] as MealType[]).map((type) => (
+                <TouchableOpacity
+                  key={type}
+                  style={[
+                    styles.mealTypeButton,
+                    editMealTypes.includes(type) && styles.mealTypeButtonSelected,
+                  ]}
+                  onPress={() => toggleEditMealType(type)}
+                >
+                  <Text
+                    style={[
+                      styles.mealTypeButtonText,
+                      editMealTypes.includes(type) &&
+                        styles.mealTypeButtonTextSelected,
+                    ]}
+                  >
+                    {type}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.cancelButton]}
+                onPress={() => {
+                  setShowEditModal(false);
+                  setEditingItem(null);
+                }}
+              >
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.saveButton]}
+                onPress={handleEditItem}
+              >
+                <Text style={styles.saveButtonText}>Save</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -229,8 +390,42 @@ const styles = StyleSheet.create({
     color: '#FF6B35',
     fontWeight: 'bold',
   },
+  statsContainer: {
+    backgroundColor: '#fff',
+    marginHorizontal: 16,
+    marginTop: 16,
+    padding: 16,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  statsTotal: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 8,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  statsBadge: {
+    fontSize: 13,
+    color: '#555',
+    backgroundColor: '#FFF5F3',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#FFD5C8',
+  },
   list: {
     flex: 1,
+    marginTop: 8,
   },
   itemCard: {
     backgroundColor: '#fff',
@@ -265,6 +460,22 @@ const styles = StyleSheet.create({
   itemCategory: {
     fontSize: 12,
     color: '#999',
+  },
+  itemActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  editButton: {
+    backgroundColor: '#2196F3',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+  editButtonText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
   deleteButton: {
     backgroundColor: '#f44336',
