@@ -1,26 +1,33 @@
 # PersonalCook 🍳
 
-[![Build and Deploy](https://github.com/aadesh2410/PersonalCook/actions/workflows/firebase-deploy.yml/badge.svg)](https://github.com/aadesh2410/PersonalCook/actions/workflows/firebase-deploy.yml)
+[![Deploy to Netlify](https://github.com/aadesh2410/PersonalCook/actions/workflows/netlify-deploy.yml/badge.svg)](https://github.com/aadesh2410/PersonalCook/actions/workflows/netlify-deploy.yml)
 
 A mobile application that acts as your personal daily cook by suggesting what to prepare every day. Designed for Indian families (Maharashtrian cuisine), this app helps you decide on breakfast, lunch, and dinner with intelligent recommendations.
 
-## 📱 Get It On Your Phone!
+## 🌐 Access the App!
 
-**Want to use PersonalCook on your mobile device?**
+**Want to use PersonalCook? Choose your preferred method:**
 
-### 🔥 Recommended: Firebase Deployment (NEW!)
-- **For Users**: [How to Install the App](HOW_TO_INSTALL.md) - Just download and install!
-- **For Admins**: [Firebase Setup Guide](FIREBASE_SETUP.md) - One-time automated setup
+### 🚀 Recommended: Web App via Netlify (NEW!)
+- **For Users**: Just visit the URL - works on any device!
+- **For Admins**: [Netlify Quick Start](NETLIFY_QUICKSTART.md) - 10 minute setup
 
 **Benefits:**
-- ✅ Fully automated builds and deployments
-- ✅ Download directly to your phone (no Expo Go needed)
+- ✅ No installation required - just open in browser
+- ✅ Works on ALL devices (iOS, Android, Desktop, Tablet)
 - ✅ Automatic updates when code changes
-- ✅ 100% FREE with no manual intervention
+- ✅ Can be installed as a PWA (Progressive Web App)
+- ✅ 100% FREE forever
+- ✅ Faster deployment (3-5 minutes vs 20-25 minutes)
+
+**Read More:**
+- 📖 [Detailed Netlify Deployment Guide](NETLIFY_DEPLOYMENT.md)
+- ⚡ [Quick Start Guide](NETLIFY_QUICKSTART.md)
 
 ### Alternative Options:
 - ⚡ **Expo Go** (5 minutes, FREE) - See [Mobile Setup Guide](MOBILE_SETUP.md)
 - 🏪 **App Stores** (2-7 days, $25-$99) - See [Deployment Guide](DEPLOYMENT.md)
+- 🔥 **Firebase APK Distribution** - See [Firebase Setup Guide](FIREBASE_SETUP.md)
 
 ## Features
 
