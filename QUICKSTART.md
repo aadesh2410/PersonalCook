@@ -1,93 +1,116 @@
-# Quick Start Guide
+# Quick Start Guide — iOS with Expo Go
 
-Get PersonalCook running on your phones in 5 minutes!
+Run PersonalCook on your iPhone in about 5 minutes using the **Expo Go** app — no developer account required!
 
-> 📱 **For more detailed instructions and alternative methods, see [MOBILE_SETUP.md](MOBILE_SETUP.md)**
-
-## Step 1: Install Expo Go
-
-### On Android (Your Wife's Phone):
-1. Open Google Play Store
-2. Search for "Expo Go"
-3. Install the app
-
-### On iOS (Your Phone):
-1. Open App Store
-2. Search for "Expo Go"
-3. Install the app
-
-## Step 2: Start the Development Server
-
-On your computer:
-
-```bash
-cd PersonalCook
-npm install  # First time only
-npm start
-```
-
-A QR code will appear in the terminal.
-
-## Step 3: Open on Your Phones
-
-### Android:
-1. Open the Expo Go app
-2. Tap "Scan QR code"
-3. Scan the QR code from terminal
-4. App will load!
-
-### iOS:
-1. Open the Camera app
-2. Point at the QR code
-3. Tap the notification that appears
-4. App will open in Expo Go!
-
-## Important Notes
-
-✅ **Both phones must be on the same WiFi network as your computer**
-
-✅ **Keep the terminal running** - Don't close it while using the app
-
-✅ **The app saves data locally** - Each phone has its own data
-
-## Using the App
-
-### 1. View Today's Recommendations
-- The home screen shows 3 suggestions each for breakfast, lunch, and dinner
-- Tap on a meal to select it
-- Tap "Mark as Prepared" to record it
-
-### 2. Add Your Own Food Items
-- Go to "Manage Foods" tab
-- Tap "+ Add New"
-- Enter food name, category, and meal types
-- Tap "Add"
-
-### 3. View History
-- Go to "History" tab
-- See all meals you've prepared
-- Organized by date
-
-## Troubleshooting
-
-**Can't see the QR code?**
-- Try running: `npm start -- --tunnel`
-
-**App won't connect?**
-- Make sure you're on the same WiFi
-- Restart the server: `npm start -- --clear`
-
-**App crashes?**
-- Shake your phone
-- Tap "Reload"
-
-## Next Steps
-
-Once you're happy with the app, check out [DEPLOYMENT.md](DEPLOYMENT.md) for:
-- Creating a standalone app (no Expo Go needed)
-- Publishing to App Store/Play Store
-- Offline usage
+> 📱 **For all platform options (Android, standalone builds, App Store), see [MOBILE_SETUP.md](MOBILE_SETUP.md)**
 
 ---
 
-**Enjoy your PersonalCook! 🍳**
+## What You Need
+
+- An iPhone with **Expo Go** installed ([App Store link](https://apps.apple.com/app/expo-go/id982107779))
+- A computer (Mac, Windows, or Linux) with **Node.js 18+** installed ([nodejs.org](https://nodejs.org))
+- Both the iPhone and computer on the **same Wi-Fi network** *(recommended — or use tunnel mode if needed, see Troubleshooting below)*
+
+---
+
+## Step 1: Install Expo Go on Your iPhone
+
+1. Open the **App Store** on your iPhone
+2. Search for **"Expo Go"**
+3. Tap **"Get"** and install it
+
+---
+
+## Step 2: Set Up the App on Your Computer
+
+Open a terminal and run:
+
+```bash
+# 1. Clone the repository (skip if you already have the folder)
+git clone https://github.com/aadesh2410/PersonalCook.git
+
+# 2. Enter the project folder
+cd PersonalCook
+
+# 3. Install dependencies (first time only — takes ~1 minute)
+npm install
+
+# 4. Start the Expo development server
+npm start
+```
+
+After `npm start`, a **QR code** will appear in the terminal (or automatically open in your browser).
+
+---
+
+## Step 3: Open the App on Your iPhone
+
+1. Open the default **Camera** app on your iPhone
+2. Point the camera at the **QR code** shown in the terminal or browser
+3. A banner will appear at the top — tap it to open in **Expo Go**
+4. The app will load in 10–30 seconds
+
+> **Tip:** If the Camera method doesn't work, open Expo Go directly and tap **"Scan QR code"**.
+
+---
+
+## Step 4: Use PersonalCook
+
+| Tab | What it does |
+|-----|-------------|
+| 🍳 **Recommendations** | See today's suggested meals for breakfast, lunch & dinner |
+| 📝 **Manage Foods** | Add or remove food items from your personal list |
+| 📅 **History** | View all meals you've prepared, organised by date |
+
+**To mark a meal as prepared:**
+1. Tap on a suggested meal on the Home screen
+2. Tap **"Mark as Prepared"**
+3. The recommendation list will update automatically
+
+---
+
+## Important Notes
+
+- ✅ Keep the **terminal running** while you use the app — closing it will disconnect Expo Go
+- ✅ Your iPhone and computer should be on the **same Wi-Fi network** (use `--tunnel` flag if they aren't)
+- ✅ All data is stored **locally on your iPhone** — no account or internet needed
+- ✅ To reload after a code change: **shake your iPhone** → tap **"Reload"**
+
+---
+
+## Troubleshooting
+
+**QR code won't scan / Camera banner doesn't appear**
+```bash
+# Use the tunnel mode — works even across different networks
+npm start -- --tunnel
+```
+
+**"Unable to connect to Metro" error**
+- Confirm both devices share the same Wi-Fi
+- Try: `npm start -- --clear` (clears the cache)
+- Disable VPN if one is running
+
+**App shows an error screen on load**
+- Shake your iPhone and tap **"Reload"**
+- Check the terminal for error messages
+
+**`npm install` fails**
+```bash
+rm -rf node_modules
+npm install
+```
+
+---
+
+## Next Steps
+
+Once you're comfortable with the app:
+
+- **Go standalone** (no Expo Go needed): See [MOBILE_SETUP.md — Method 2](MOBILE_SETUP.md)
+- **Publish to App Store**: See [MOBILE_SETUP.md — Method 3](MOBILE_SETUP.md) *(requires $99/year Apple Developer account)*
+
+---
+
+**Happy Cooking! 🍳**
