@@ -8,7 +8,28 @@ A mobile application that acts as your personal daily cook by suggesting what to
 
 **Want to use PersonalCook? Choose your preferred method:**
 
-### 🚀 Recommended: Web App via Netlify (NEW!)
+### 📱 Quickest: Run on iPhone with Expo Go (FREE, ~5 minutes)
+
+Already have Expo Go? This is the fastest way to get the app running on your iPhone:
+
+1. Install [Expo Go](https://apps.apple.com/app/expo-go/id982107779) from the App Store (if not already installed)
+2. Clone this repo and run `npm install && npm start`
+3. Point your iPhone Camera at the QR code → tap the banner → done!
+
+**→ Full step-by-step guide: [QUICKSTART.md](QUICKSTART.md)**
+
+---
+
+### Other Access Methods
+
+| Method | Time | Cost | Best For |
+|--------|------|------|----------|
+| 🌐 **Web (Netlify)** | 10 min | FREE | Any device, no install |
+| 📱 **Expo Go** | 5 min | FREE | iOS/Android quick testing |
+| 📦 **Standalone Build** | 30 min | FREE | Daily use without Expo Go |
+| 🏪 **App Stores** | 2-7 days | $25-$99 | Public distribution |
+
+### 🌐 Web App via Netlify
 - **For Users**: Just visit the URL - works on any device!
 - **For Admins**: [Netlify Quick Start](NETLIFY_QUICKSTART.md) - 10 minute setup
 
@@ -68,9 +89,9 @@ A mobile application that acts as your personal daily cook by suggesting what to
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
-- npm or yarn
-- Expo Go app on your phone (for testing)
+- Node.js (v18 or higher) — [nodejs.org](https://nodejs.org)
+- npm (comes with Node.js)
+- **Expo Go** app on your iPhone — [App Store](https://apps.apple.com/app/expo-go/id982107779)
 
 ### Steps
 
@@ -90,9 +111,14 @@ A mobile application that acts as your personal daily cook by suggesting what to
    npm start
    ```
 
-4. **Run on your device**
-   - **iOS**: Scan the QR code with Camera app
-   - **Android**: Scan the QR code with Expo Go app
+4. **Open on your iPhone**
+   - Open the **Camera** app → point at the QR code in the terminal
+   - Tap the banner that appears → app opens in **Expo Go**
+   - *Alternatively*: Open Expo Go → tap "Scan QR code"
+
+   > If you're on a different network than your computer, use: `npm start -- --tunnel`
+
+   - **Android**: Open Expo Go → tap "Scan QR code" → scan the terminal QR code
    - **Web**: Press `w` in the terminal
 
 ## How to Use
