@@ -1,13 +1,16 @@
-// Storage service for managing food items and meal history
+// Storage service for managing food items, meal history, user profile, and meal plans
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FoodItem, MealHistory } from '../types';
+import { FoodItem, MealHistory, UserProfile, WeeklyPlan } from '../types';
 import { INITIAL_FOOD_ITEMS } from '../data/foodItems';
 
 const FOOD_ITEMS_KEY = '@PersonalCook:foodItems';
 const MEAL_HISTORY_KEY = '@PersonalCook:mealHistory';
+const USER_PROFILE_KEY = '@PersonalCook:userProfile';
+const WEEKLY_PLAN_KEY = '@PersonalCook:weeklyPlan';
 
 export class StorageService {
-  // Food Items Management
+  // ── Food Items ──────────────────────────────────────────────────────────
+
   static async getFoodItems(): Promise<FoodItem[]> {
     try {
       const data = await AsyncStorage.getItem(FOOD_ITEMS_KEY);
@@ -68,7 +71,8 @@ export class StorageService {
     }
   }
 
-  // Meal History Management
+  // ── Meal History ─────────────────────────────────────────────────────────
+
   static async getMealHistory(): Promise<MealHistory[]> {
     try {
       const data = await AsyncStorage.getItem(MEAL_HISTORY_KEY);
@@ -90,9 +94,58 @@ export class StorageService {
     }
   }
 
+  // ── User Profile ─────────────────────────────────────────────────────────
+
+  static async getUserProfile(): Promise<UserProfile | null> {
+    try {
+      const data = await AsyncStorage.getItem(USER_PROFILE_KEY);
+      return data ? JSON.parse(data) : null;
+    } catch (error) {
+      console.error('Error getting user profile:', error);
+      return null;
+    }
+  }
+
+  static async saveUserProfile(profile: UserProfile): Promise<void> {
+    try {
+      await AsyncStorage.setItem(USER_PROFILE_KEY, JSON.stringify(profile));
+    } catch (error) {
+      console.error('Error saving user profile:', error);
+      throw error;
+    }
+  }
+
+  // ── Weekly Plan ───────────────────────────────────────────────────────────
+
+  static async getWeeklyPlan(): Promise<WeeklyPlan | null> {
+    try {
+      const data = await AsyncStorage.getItem(WEEKLY_PLAN_KEY);
+      return data ? JSON.parse(data) : null;
+    } catch (error) {
+      console.error('Error getting weekly plan:', error);
+      return null;
+    }
+  }
+
+  static async saveWeeklyPlan(plan: WeeklyPlan): Promise<void> {
+    try {
+      await AsyncStorage.setItem(WEEKLY_PLAN_KEY, JSON.stringify(plan));
+    } catch (error) {
+      console.error('Error saving weekly plan:', error);
+      throw error;
+    }
+  }
+
+  // ── Utility ───────────────────────────────────────────────────────────────
+
   static async clearAllData(): Promise<void> {
     try {
-      await AsyncStorage.multiRemove([FOOD_ITEMS_KEY, MEAL_HISTORY_KEY]);
+      await AsyncStorage.multiRemove([
+        FOOD_ITEMS_KEY,
+        MEAL_HISTORY_KEY,
+        USER_PROFILE_KEY,
+        WEEKLY_PLAN_KEY,
+      ]);
     } catch (error) {
       console.error('Error clearing data:', error);
       throw error;

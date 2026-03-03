@@ -9,15 +9,45 @@ interface MealCardProps {
   selected?: boolean;
 }
 
+const VEG_DOT: Record<string, string> = {
+  veg: '🟢',
+  eggetarian: '🟡',
+  'non-veg': '🔴',
+};
+
+const DIFFICULTY_LABEL: Record<string, string> = {
+  easy: '⭐ Easy',
+  medium: '⭐⭐ Medium',
+  hard: '⭐⭐⭐ Hard',
+};
+
 export const MealCard: React.FC<MealCardProps> = ({ foodItem, onSelect, selected }) => {
   return (
     <TouchableOpacity
       style={[styles.card, selected && styles.selectedCard]}
       onPress={() => onSelect(foodItem)}
     >
-      <Text style={styles.name}>{foodItem.name}</Text>
-      {foodItem.preparationTime && (
-        <Text style={styles.time}>⏱️ {foodItem.preparationTime} min</Text>
+      <View style={styles.topRow}>
+        <Text style={styles.name}>{foodItem.name}</Text>
+        {foodItem.vegType && (
+          <Text style={styles.vegDot}>{VEG_DOT[foodItem.vegType] ?? ''}</Text>
+        )}
+      </View>
+      <View style={styles.metaRow}>
+        {foodItem.preparationTime && (
+          <Text style={styles.metaChip}>⏱️ {foodItem.preparationTime} min</Text>
+        )}
+        {foodItem.spiceLevel && (
+          <Text style={styles.metaChip}>
+            {foodItem.spiceLevel === 'low' ? '🟢 Mild' : foodItem.spiceLevel === 'medium' ? '🟡 Medium' : '🔴 Spicy'}
+          </Text>
+        )}
+        {foodItem.difficulty && (
+          <Text style={styles.metaChip}>{DIFFICULTY_LABEL[foodItem.difficulty]}</Text>
+        )}
+      </View>
+      {foodItem.festivalTag && (
+        <Text style={styles.festivalTag}>🎉 {foodItem.festivalTag}</Text>
       )}
       <Text style={styles.category}>{foodItem.category}</Text>
       {foodItem.isCustom && <Text style={styles.customBadge}>Custom</Text>}
@@ -44,15 +74,40 @@ const styles = StyleSheet.create({
     borderColor: '#FF6B35',
     backgroundColor: '#FFF5F3',
   },
+  topRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
   name: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: 'bold',
     color: '#333',
+    flex: 1,
+  },
+  vegDot: {
+    fontSize: 16,
+    marginLeft: 8,
+  },
+  metaRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
     marginBottom: 4,
   },
-  time: {
-    fontSize: 14,
-    color: '#666',
+  metaChip: {
+    fontSize: 12,
+    color: '#555',
+    backgroundColor: '#F5F5F5',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+  },
+  festivalTag: {
+    fontSize: 12,
+    color: '#E91E63',
+    fontWeight: '600',
     marginBottom: 4,
   },
   category: {

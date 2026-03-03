@@ -53,6 +53,8 @@ export const ManageScreen: React.FC = () => {
         id: `custom-${Date.now()}`,
         name: newItemName.trim(),
         mealType: selectedMealTypes,
+        region: 'all',
+        vegType: 'veg',
         category: category.trim() || 'custom',
         isCustom: true,
       };
