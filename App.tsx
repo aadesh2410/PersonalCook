@@ -4,8 +4,11 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeScreen } from './src/screens/HomeScreen';
+import { WeeklyPlannerScreen } from './src/screens/WeeklyPlannerScreen';
+import { GroceryListScreen } from './src/screens/GroceryListScreen';
 import { ManageScreen } from './src/screens/ManageScreen';
 import { HistoryScreen } from './src/screens/HistoryScreen';
+import { ProfileScreen } from './src/screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,7 +26,7 @@ export default function App() {
             height: 60,
           },
           tabBarLabelStyle: {
-            fontSize: 12,
+            fontSize: 11,
             fontWeight: '600',
           },
         }}
@@ -32,9 +35,29 @@ export default function App() {
           name="Home"
           component={HomeScreen}
           options={{
-            tabBarLabel: 'Recommendations',
+            tabBarLabel: 'Today',
             tabBarIcon: ({ color, size }) => (
               <Text style={{ fontSize: size, color }}>🍳</Text>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Weekly"
+          component={WeeklyPlannerScreen}
+          options={{
+            tabBarLabel: 'Weekly Plan',
+            tabBarIcon: ({ color, size }) => (
+              <Text style={{ fontSize: size, color }}>📅</Text>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Grocery"
+          component={GroceryListScreen}
+          options={{
+            tabBarLabel: 'Grocery',
+            tabBarIcon: ({ color, size }) => (
+              <Text style={{ fontSize: size, color }}>🛒</Text>
             ),
           }}
         />
@@ -42,7 +65,7 @@ export default function App() {
           name="Manage"
           component={ManageScreen}
           options={{
-            tabBarLabel: 'Manage Foods',
+            tabBarLabel: 'Foods',
             tabBarIcon: ({ color, size }) => (
               <Text style={{ fontSize: size, color }}>📝</Text>
             ),
@@ -54,7 +77,17 @@ export default function App() {
           options={{
             tabBarLabel: 'History',
             tabBarIcon: ({ color, size }) => (
-              <Text style={{ fontSize: size, color }}>📅</Text>
+              <Text style={{ fontSize: size, color }}>🕐</Text>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{
+            tabBarLabel: 'Profile',
+            tabBarIcon: ({ color, size }) => (
+              <Text style={{ fontSize: size, color }}>👤</Text>
             ),
           }}
         />

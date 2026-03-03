@@ -10,13 +10,16 @@ import {
   Alert,
 } from 'react-native';
 import { MealCard } from '../components/MealCard';
-import { FoodItem, MealHistory, MealType } from '../types';
+import { FoodItem, MealHistory, UserProfile, REGION_LABELS } from '../types';
+
+type MainMealType = 'breakfast' | 'lunch' | 'dinner';
 import { StorageService } from '../services/storageService';
 import { RecommendationService } from '../services/recommendationService';
 
 export const HomeScreen: React.FC = () => {
   const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
   const [mealHistory, setMealHistory] = useState<MealHistory[]>([]);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [recommendations, setRecommendations] = useState({
     breakfast: [] as FoodItem[],
     lunch: [] as FoodItem[],
@@ -35,13 +38,16 @@ export const HomeScreen: React.FC = () => {
 
   const loadData = async () => {
     try {
-      const items = await StorageService.getFoodItems();
-      const history = await StorageService.getMealHistory();
+      const [items, history, userProfile] = await Promise.all([
+        StorageService.getFoodItems(),
+        StorageService.getMealHistory(),
+        StorageService.getUserProfile(),
+      ]);
       setFoodItems(items);
       setMealHistory(history);
-      
-      // Get recommendations
-      const recs = RecommendationService.getAllRecommendations(items, history);
+      setProfile(userProfile);
+
+      const recs = RecommendationService.getAllRecommendations(items, history, userProfile);
       setRecommendations(recs);
     } catch (error) {
       console.error('Error loading data:', error);
@@ -55,14 +61,14 @@ export const HomeScreen: React.FC = () => {
     setRefreshing(false);
   };
 
-  const handleSelectMeal = (item: FoodItem, mealType: MealType) => {
+  const handleSelectMeal = (item: FoodItem, mealType: MainMealType) => {
     setSelectedItems({
       ...selectedItems,
       [mealType]: selectedItems[mealType]?.id === item.id ? null : item,
     });
   };
 
-  const handleConfirmMeal = async (mealType: MealType) => {
+  const handleConfirmMeal = async (mealType: MainMealType) => {
     const selectedItem = selectedItems[mealType];
     if (!selectedItem) {
       Alert.alert('Please select a meal first');
@@ -80,12 +86,8 @@ export const HomeScreen: React.FC = () => {
 
       await StorageService.addMealHistory(newHistory);
       Alert.alert('Success', `${selectedItem.name} marked as prepared!`);
-      
-      // Clear selection and refresh
-      setSelectedItems({
-        ...selectedItems,
-        [mealType]: null,
-      });
+
+      setSelectedItems({ ...selectedItems, [mealType]: null });
       await loadData();
     } catch (error) {
       console.error('Error confirming meal:', error);
@@ -95,19 +97,23 @@ export const HomeScreen: React.FC = () => {
 
   const renderMealSection = (
     title: string,
-    mealType: MealType,
+    mealType: MainMealType,
     items: FoodItem[]
   ) => (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>{title}</Text>
-      {items.map((item) => (
-        <MealCard
-          key={item.id}
-          foodItem={item}
-          onSelect={(item) => handleSelectMeal(item, mealType)}
-          selected={selectedItems[mealType]?.id === item.id}
-        />
-      ))}
+      {items.length === 0 ? (
+        <Text style={styles.emptySection}>No recommendations yet. Set up your profile!</Text>
+      ) : (
+        items.map((item) => (
+          <MealCard
+            key={item.id}
+            foodItem={item}
+            onSelect={(i) => handleSelectMeal(i, mealType)}
+            selected={selectedItems[mealType]?.id === item.id}
+          />
+        ))
+      )}
       {selectedItems[mealType] && (
         <TouchableOpacity
           style={styles.confirmButton}
@@ -121,6 +127,10 @@ export const HomeScreen: React.FC = () => {
     </View>
   );
 
+  const regionLabel = profile?.isSetupComplete
+    ? `${profile.name}'s ${REGION_LABELS[profile.region]} Meals`
+    : "Today's Recommendations";
+
   return (
     <ScrollView
       style={styles.container}
@@ -129,11 +139,21 @@ export const HomeScreen: React.FC = () => {
       }
     >
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Today's Recommendations</Text>
+        <Text style={styles.headerTitle}>{regionLabel}</Text>
         <Text style={styles.headerSubtitle}>
-          Select and mark what you prepare
+          {profile?.isSetupComplete
+            ? `${profile.vegType === 'veg' ? '🥦 Veg' : profile.vegType === 'eggetarian' ? '🥚 Eggetarian' : '🍗 Non-Veg'} · Spice: ${profile.spiceLevel}`
+            : 'Select and mark what you prepare'}
         </Text>
       </View>
+
+      {!profile?.isSetupComplete && (
+        <View style={styles.profileBanner}>
+          <Text style={styles.profileBannerText}>
+            👤 Set up your profile to get personalised recommendations based on your region!
+          </Text>
+        </View>
+      )}
 
       {renderMealSection('🌅 Breakfast', 'breakfast', recommendations.breakfast)}
       {renderMealSection('☀️ Lunch', 'lunch', recommendations.lunch)}
@@ -153,7 +173,7 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
     marginBottom: 4,
@@ -162,6 +182,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#fff',
     opacity: 0.9,
+  },
+  profileBanner: {
+    backgroundColor: '#FFF3E0',
+    marginHorizontal: 16,
+    marginTop: 16,
+    padding: 14,
+    borderRadius: 10,
+    borderLeftWidth: 4,
+    borderLeftColor: '#FF9800',
+  },
+  profileBannerText: {
+    color: '#E65100',
+    fontSize: 14,
+    lineHeight: 20,
   },
   section: {
     marginTop: 24,
@@ -173,6 +207,12 @@ const styles = StyleSheet.create({
     color: '#333',
     marginLeft: 16,
     marginBottom: 12,
+  },
+  emptySection: {
+    marginHorizontal: 16,
+    color: '#999',
+    fontSize: 14,
+    fontStyle: 'italic',
   },
   confirmButton: {
     backgroundColor: '#4CAF50',

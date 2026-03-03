@@ -2,272 +2,144 @@
 
 [![Deploy to Netlify](https://github.com/aadesh2410/PersonalCook/actions/workflows/netlify-deploy.yml/badge.svg)](https://github.com/aadesh2410/PersonalCook/actions/workflows/netlify-deploy.yml)
 
-A mobile application that acts as your personal daily cook by suggesting what to prepare every day. Designed for Indian families (Maharashtrian cuisine), this app helps you decide on breakfast, lunch, and dinner with intelligent recommendations.
+A mobile application that acts as your personal daily cook by suggesting region-specific Indian meals every day. Set up your profile once and get personalised Breakfast / Lunch / Dinner recommendations based on your **state**, diet preference, and spice level.
 
-## 🌐 Access the App!
+## 🌐 Access the App
 
-**Want to use PersonalCook? Choose your preferred method:**
+| Method | Time | Cost | Notes |
+|--------|------|------|-------|
+| **Web (Netlify)** ✅ | 10 min | FREE | Works on all devices, no install needed |
+| **Expo Go** | 5 min | FREE | Scan QR code with phone |
+| **App Stores** | 2–7 days | $25–$99 | Public distribution |
 
-### 🚀 Recommended: Web App via Netlify (NEW!)
-- **For Users**: Just visit the URL - works on any device!
-- **For Admins**: [Netlify Quick Start](NETLIFY_QUICKSTART.md) - 10 minute setup
+See [DEPLOYMENT.md](DEPLOYMENT.md) for full deployment instructions.
 
-**Benefits:**
-- ✅ No installation required - just open in browser
-- ✅ Works on ALL devices (iOS, Android, Desktop, Tablet)
-- ✅ Automatic updates when code changes
-- ✅ Can be installed as a PWA (Progressive Web App)
-- ✅ 100% FREE forever
-- ✅ Faster deployment (3-5 minutes vs 20-25 minutes)
+## ✨ Features
 
-**Read More:**
-- 📖 [Detailed Netlify Deployment Guide](NETLIFY_DEPLOYMENT.md)
-- ⚡ [Quick Start Guide](NETLIFY_QUICKSTART.md)
+### 👤 User Profile
+Set up your personal profile with:
+- **Name & Region** – choose from 5 Indian states (Maharashtra, Gujarat, Punjab, Tamil Nadu, West Bengal)
+- **City** (optional)
+- **Diet preference** – Veg / Eggetarian / Non-Veg
+- **Spice level** – Mild / Medium / Spicy
+- **Family members** count
+- **Allergies / items to avoid**
 
-### Alternative Options:
-- ⚡ **Expo Go** (5 minutes, FREE) - See [Mobile Setup Guide](MOBILE_SETUP.md)
-- 🏪 **App Stores** (2-7 days, $25-$99) - See [Deployment Guide](DEPLOYMENT.md)
-- 🔥 **Firebase APK Distribution** - See [Firebase Setup Guide](FIREBASE_SETUP.md)
+### 🗺️ Region-Based Recommendations
+Dishes are tailored to your selected state:
 
-## Features
+| State | Breakfast | Lunch | Dinner |
+|-------|-----------|-------|--------|
+| Maharashtra | Poha, Thalipeeth, Sabudana Khichdi | Pithla Bhakri, Varan Bhaat, Bharli Vangi | Zunka Bhakri, Tomato Saar, Matki Usal |
+| Gujarat | Dhokla, Thepla | Dal Dhokli, Undhiyu, Khichdi Kadhi | Sev Tameta Nu Shaak |
+| Punjab | Aloo Paratha, Chole Bhature | Dal Makhani, Sarson da Saag, Rajma Chawal | Butter Chicken |
+| Tamil Nadu | Idli Sambar, Masala Dosa, Pongal | Sambar Rice, Rasam Rice, Kootu | Chettinad Chicken |
+| West Bengal | Luchi Aloo Dum | Shorshe Ilish, Aloo Posto, Cholar Dal | Kosha Mangsho |
 
-✨ **Smart Recommendations**
-- AI-powered recommendation algorithm that suggests meals based on when they were last prepared
-- Prevents meal repetition by tracking preparation history
-- Separate recommendations for breakfast, lunch, and dinner
+### 📅 Weekly Meal Planner
+- Auto-generate a **7-day meal plan** personalised to your region & diet
+- **Shuffle All** – regenerate the entire week
+- **Shuffle individual meal** – replace a single dish with 🔄
+- **Save plan** to device storage
+- **No-repetition logic** – avoids suggesting the same dish twice in the same week
 
-🍛 **Maharashtrian Cuisine Database**
-- Pre-loaded with 25+ authentic Maharashtrian food items
-- Includes popular dishes like Poha, Misal Pav, Thalipeeth, Masale Bhaat, and more
-- Categorized by meal type and preparation style
+### 🛒 Grocery Auto-List
+- Automatically generates an ingredient list from your weekly plan
+- Ingredients grouped by category: Vegetables, Grains, Spices, Dairy, Lentils & Legumes, Non-Veg, Other
+- **Check off items** as you shop with a progress bar
+- Refresh anytime to regenerate from the latest saved plan
 
-📝 **Custom Food Management**
-- Add your own food items to the database
-- Specify meal types (breakfast, lunch, dinner)
-- Delete custom items as needed
+### 🍽️ Meal Types Supported
+- Breakfast · Lunch · Dinner · Snacks · Festival special · Fasting (Upwas)
 
-📅 **Meal History Tracking**
-- Track what you've prepared and when
-- View complete meal history organized by date
-- Mark meals as prepared with a single tap
+### 📝 Custom Food Management
+- Add your own dishes to the database
+- Edit or delete existing items
 
-📱 **Cross-Platform**
-- Single codebase for both iOS and Android
-- Built with React Native and Expo
-- Works on both platforms seamlessly
+### 🕐 Meal History
+- Track every meal you've prepared and when
+- History grouped by date (Today / Yesterday / date)
 
 ## Technology Stack
 
 - **Framework**: React Native with Expo
 - **Language**: TypeScript
 - **Navigation**: React Navigation (Bottom Tabs)
-- **Storage**: AsyncStorage (local data persistence)
+- **Storage**: AsyncStorage (fully offline, no backend needed)
 - **UI**: Native React Native components
 
 ## Installation & Setup
 
-### Prerequisites
+```bash
+# 1. Clone
+git clone https://github.com/aadesh2410/PersonalCook.git
+cd PersonalCook
 
-- Node.js (v14 or higher)
-- npm or yarn
-- Expo Go app on your phone (for testing)
+# 2. Install dependencies
+npm install
 
-### Steps
+# 3. Start dev server
+npm start
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/aadesh2410/PersonalCook.git
-   cd PersonalCook
-   ```
+# 4. Open on device
+#   iOS:     scan QR with Camera app
+#   Android: scan QR with Expo Go
+#   Web:     press w in terminal
+```
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**
-   ```bash
-   npm start
-   ```
-
-4. **Run on your device**
-   - **iOS**: Scan the QR code with Camera app
-   - **Android**: Scan the QR code with Expo Go app
-   - **Web**: Press `w` in the terminal
+Full guides: [HOW_TO_INSTALL.md](HOW_TO_INSTALL.md) · [MOBILE_SETUP.md](MOBILE_SETUP.md)
 
 ## How to Use
 
-### 1. View Recommendations
-- Open the app to see today's meal recommendations
-- Recommendations are shown for breakfast, lunch, and dinner
-- Each meal shows 3 suggestions
-
-### 2. Mark Meals as Prepared
-- Tap on a recommended meal to select it
-- Tap the "Mark as Prepared" button to record it
-- The app will update recommendations based on this
-
-### 3. Manage Food Items
-- Navigate to the "Manage Foods" tab
-- Tap "+ Add New" to add custom food items
-- Specify the name, category, and meal types
-- Delete custom items by tapping "Delete"
-
-### 4. View History
-- Navigate to the "History" tab
-- See all meals you've prepared organized by date
-- Track your meal variety over time
-
-## Deployment
-
-### 🔥 Automated Firebase Deployment (Recommended)
-
-**Complete automated deployment with zero manual intervention!**
-
-See the [Firebase Setup Guide](FIREBASE_SETUP.md) for detailed instructions.
-
-**Quick Overview:**
-1. Set up Firebase project (one-time, 10 minutes)
-2. Configure GitHub secrets (one-time, 5 minutes)
-3. Push code to `main` branch
-4. GitHub Actions automatically builds and deploys APK
-5. Users receive download links via email
-6. **No manual steps needed for future deployments!**
-
-**Benefits:**
-- ✅ 100% automated build and deployment
-- ✅ FREE (Firebase + GitHub Actions + EAS free tier)
-- ✅ Direct APK download (no Expo Go needed)
-- ✅ Automatic notifications to testers
-- ✅ Version control and release history
-
-### Alternative Deployment Methods
-
-📱 **For other deployment methods, see [MOBILE_SETUP.md](MOBILE_SETUP.md) and [DEPLOYMENT.md](DEPLOYMENT.md)**
-
-**Option 1: Expo Go App**
-- Quick testing, requires Expo Go app
-- See [MOBILE_SETUP.md](MOBILE_SETUP.md)
-
-**Option 2: Manual EAS Build**
-```bash
-# Install EAS CLI
-npm install -g eas-cli
-
-# Configure EAS
-eas build:configure
-
-# Build for Android
-eas build --platform android --profile production
-```
-
-**Option 3: App Store/Play Store Distribution**
-- For public distribution
-- See [DEPLOYMENT.md](DEPLOYMENT.md) for details
-- Requires developer accounts ($25-$99)
+1. **Set up your Profile** → tap the 👤 Profile tab → fill in region, diet, spice level → Save
+2. **View Today's Meals** → Home tab shows 3 personalised suggestions per meal
+3. **Mark meals as prepared** → tap a card, then tap the green confirm button
+4. **Plan your week** → Weekly Plan tab → Shuffle / lock meals → Save
+5. **Build grocery list** → Grocery tab → check off items as you shop
+6. **Add custom dishes** → Foods tab → tap + Add New
 
 ## Project Structure
 
 ```
 PersonalCook/
 ├── src/
-│   ├── components/       # Reusable UI components
-│   │   └── MealCard.tsx
-│   ├── screens/          # Main screens
-│   │   ├── HomeScreen.tsx
-│   │   ├── ManageScreen.tsx
-│   │   └── HistoryScreen.tsx
-│   ├── services/         # Business logic
-│   │   ├── storageService.ts
-│   │   └── recommendationService.ts
-│   ├── data/            # Initial data
-│   │   └── foodItems.ts
-│   └── types/           # TypeScript types
-│       └── index.ts
-├── App.tsx              # Main app component
-├── package.json         # Dependencies
-└── README.md           # This file
+│   ├── components/
+│   │   └── MealCard.tsx              # Dish card with veg dot, spice, difficulty
+│   ├── screens/
+│   │   ├── HomeScreen.tsx            # Today's personalised recommendations
+│   │   ├── WeeklyPlannerScreen.tsx   # 7-day planner with shuffle & save
+│   │   ├── GroceryListScreen.tsx     # Auto-generated ingredient list
+│   │   ├── ManageScreen.tsx          # Add / edit / delete food items
+│   │   ├── HistoryScreen.tsx         # Preparation history by date
+│   │   └── ProfileScreen.tsx         # User profile & preferences
+│   ├── services/
+│   │   ├── storageService.ts         # AsyncStorage wrapper
+│   │   └── recommendationService.ts  # Region-aware recommendation engine
+│   ├── data/
+│   │   ├── regionalDishes.ts         # 60+ dishes across 5 states
+│   │   └── foodItems.ts              # Legacy default items
+│   └── types/
+│       └── index.ts                  # TypeScript types
+├── App.tsx                           # Navigation setup (6 tabs)
+└── package.json
 ```
 
 ## Recommendation Algorithm
 
-The app uses a smart algorithm to suggest meals:
-
-1. **Recency Score**: Calculates days since each food item was last prepared
-2. **Prioritization**: Items not prepared recently get higher scores
-3. **Randomization**: Adds variety by randomly selecting from top candidates
-4. **Meal Type Filtering**: Only shows items appropriate for the meal type
+1. **Region filter** – only dishes from the user's selected state (+ diet filter)
+2. **Recency score** – items not prepared recently score higher
+3. **Top-half pool + shuffle** – variety without being too predictable
+4. **No-repeat window** – same dish not suggested within 3 days
 
 ## Data Storage
 
-- All data is stored locally on the device using AsyncStorage
-- No internet connection required
-- Data persists between app sessions
-- Includes:
-  - Food items (default + custom)
-  - Meal preparation history
+All data is stored locally on the device using AsyncStorage – no internet required, data persists between sessions.
 
-## Customization
+## Deployment
 
-### Adding More Default Food Items
-
-Edit `src/data/foodItems.ts` to add more items to the initial database.
-
-### Changing Colors
-
-Update the color scheme in the screen StyleSheet objects:
-- Primary color: `#FF6B35` (orange)
-- Success color: `#4CAF50` (green)
-- Background: `#f5f5f5` (light gray)
-
-### Modifying Recommendations
-
-Edit `src/services/recommendationService.ts` to change:
-- Number of recommendations per meal
-- Scoring algorithm
-- Randomization logic
-
-## Troubleshooting
-
-### App won't start
-```bash
-# Clear cache and restart
-npm start -- --clear
-```
-
-### Build errors
-```bash
-# Reinstall dependencies
-rm -rf node_modules
-npm install
-```
-
-### Storage issues
-- Clear app data from device settings
-- Reinstall the app
-
-## Future Enhancements
-
-- [ ] Cloud sync between devices
-- [ ] Grocery list generation
-- [ ] Recipe instructions
-- [ ] Nutritional information
-- [ ] Multi-user support
-- [ ] Meal planning calendar
-- [ ] Regional cuisine options (North Indian, South Indian, etc.)
-
-## Contributing
-
-This is a personal project, but suggestions and improvements are welcome!
-
-## License
-
-MIT License - Feel free to use and modify for your personal use.
-
-## Support
-
-For issues or questions, please open an issue on GitHub.
+See [DEPLOYMENT.md](DEPLOYMENT.md) for full deployment guides (Netlify, Firebase, EAS Build).
 
 ---
 
 **Made with ❤️ for Indian families who struggle with the daily "what should we cook?" question!**
+
