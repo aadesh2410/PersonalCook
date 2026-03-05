@@ -18,11 +18,11 @@ import { RecommendationService } from '../services/recommendationService';
 
 const getGreeting = (): { text: string; emoji: string; mealHint: string } => {
   const hour = new Date().getHours();
-  if (hour < 6) return { text: 'Good Night', emoji: '🌙', mealHint: 'Plan tomorrow\'s meals' };
+  if (hour < 6) return { text: 'Good Night', emoji: '🌙', mealHint: "Plan tomorrow's meals" };
   if (hour < 12) return { text: 'Good Morning', emoji: '🌅', mealHint: 'Time for a delicious breakfast!' };
-  if (hour < 17) return { text: 'Good Afternoon', emoji: '☀️', mealHint: 'What\'s cooking for lunch?' };
-  if (hour < 21) return { text: 'Good Evening', emoji: '🌆', mealHint: 'Let\'s plan dinner!' };
-  return { text: 'Good Night', emoji: '🌙', mealHint: 'Plan tomorrow\'s meals' };
+  if (hour < 17) return { text: 'Good Afternoon', emoji: '☀️', mealHint: "What's cooking for lunch?" };
+  if (hour < 21) return { text: 'Good Evening', emoji: '🌆', mealHint: "Let's plan dinner!" };
+  return { text: 'Good Night', emoji: '🌙', mealHint: "Plan tomorrow's meals" };
 };
 
 export const HomeScreen: React.FC = () => {

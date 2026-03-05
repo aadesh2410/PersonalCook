@@ -73,12 +73,7 @@ export const HistoryScreen: React.FC = () => {
           style: 'destructive',
           onPress: async () => {
             try {
-              // Get all history, filter out selected, then save back
-              const history = await StorageService.getMealHistory();
-              const remaining = history.filter((m) => !selectedIds.has(m.id));
-              // We need to save remaining history using the internal method
-              const AsyncStorage = require('@react-native-async-storage/async-storage').default;
-              await AsyncStorage.setItem('@PersonalCook:mealHistory', JSON.stringify(remaining));
+              await StorageService.deleteMealHistoryItems(selectedIds);
               setSelectedIds(new Set());
               setSelectionMode(false);
               await loadHistory();

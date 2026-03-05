@@ -48,3 +48,4 @@ firebase-debug.log
 
 # EAS Build
 .eas/
+dist/
