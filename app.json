@@ -26,7 +26,17 @@
       "edgeToEdgeEnabled": true
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "name": "PersonalCook",
+      "shortName": "Cook",
+      "description": "Your personal daily cook - Smart meal recommendations for Indian families",
+      "themeColor": "#FF6B35",
+      "backgroundColor": "#ffffff",
+      "display": "standalone",
+      "startUrl": "/",
+      "scope": "/",
+      "lang": "en",
+      "bundler": "metro"
     }
   }
 }
