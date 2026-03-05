@@ -24,6 +24,9 @@ export const ManageScreen: React.FC = () => {
   const [editName, setEditName] = useState('');
   const [editMealTypes, setEditMealTypes] = useState<MealType[]>([]);
   const [editCategory, setEditCategory] = useState('');
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [filterType, setFilterType] = useState<'all' | MealType>('all');
 
   useEffect(() => {
     loadData();
@@ -97,6 +100,34 @@ export const ManageScreen: React.FC = () => {
     );
   };
 
+  const handleBulkDelete = () => {
+    if (selectedIds.size === 0) return;
+    Alert.alert(
+      'Delete Selected',
+      `Are you sure you want to delete ${selectedIds.size} item${selectedIds.size > 1 ? 's' : ''}?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete All',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              for (const id of selectedIds) {
+                await StorageService.deleteFoodItem(id);
+              }
+              setSelectedIds(new Set());
+              setSelectionMode(false);
+              await loadData();
+              Alert.alert('Done', 'Selected items deleted successfully');
+            } catch (error) {
+              Alert.alert('Error', 'Failed to delete some items');
+            }
+          },
+        },
+      ]
+    );
+  };
+
   const handleOpenEdit = (item: FoodItem) => {
     setEditingItem(item);
     setEditName(item.name);
@@ -152,63 +183,181 @@ export const ManageScreen: React.FC = () => {
     );
   };
 
+  const toggleSelectItem = (itemId: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(itemId)) {
+        next.delete(itemId);
+      } else {
+        next.add(itemId);
+      }
+      return next;
+    });
+  };
+
+  const selectAll = () => {
+    setSelectedIds(new Set(filteredItems.map((item) => item.id)));
+  };
+
+  const deselectAll = () => {
+    setSelectedIds(new Set());
+  };
+
+  const filteredItems = filterType === 'all'
+    ? foodItems
+    : foodItems.filter((item) => item.mealType.includes(filterType));
+
   const mealCounts = {
     breakfast: foodItems.filter((item) => item.mealType.includes('breakfast')).length,
     lunch: foodItems.filter((item) => item.mealType.includes('lunch')).length,
     dinner: foodItems.filter((item) => item.mealType.includes('dinner')).length,
   };
 
+  const FILTER_OPTIONS: { value: 'all' | MealType; label: string; emoji: string }[] = [
+    { value: 'all', label: 'All', emoji: '📋' },
+    { value: 'breakfast', label: 'Breakfast', emoji: '🌅' },
+    { value: 'lunch', label: 'Lunch', emoji: '☀️' },
+    { value: 'dinner', label: 'Dinner', emoji: '🌙' },
+  ];
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Manage Food Items</Text>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => setShowAddModal(true)}
-        >
-          <Text style={styles.addButtonText}>+ Add New</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.statsContainer}>
-        <Text style={styles.statsTotal}>Total: {foodItems.length} items</Text>
-        <View style={styles.statsRow}>
-          <Text style={styles.statsBadge}>🌅 Breakfast: {mealCounts.breakfast}</Text>
-          <Text style={styles.statsBadge}>☀️ Lunch: {mealCounts.lunch}</Text>
-          <Text style={styles.statsBadge}>🌙 Dinner: {mealCounts.dinner}</Text>
+        <View style={styles.headerLeft}>
+          <Text style={styles.headerTitle}>📝 Manage Foods</Text>
+          <Text style={styles.headerSubtitle}>{foodItems.length} items total</Text>
+        </View>
+        <View style={styles.headerActions}>
+          <TouchableOpacity
+            style={[styles.headerBtn, selectionMode && styles.headerBtnActive]}
+            onPress={() => {
+              setSelectionMode(!selectionMode);
+              setSelectedIds(new Set());
+            }}
+          >
+            <Text style={[styles.headerBtnText, selectionMode && styles.headerBtnTextActive]}>
+              {selectionMode ? '✕ Cancel' : '☑ Select'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => setShowAddModal(true)}
+          >
+            <Text style={styles.addButtonText}>+ Add New</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
-      <ScrollView style={styles.list}>
-        {foodItems.map((item) => (
-          <View key={item.id} style={styles.itemCard}>
+      {/* Stats Row */}
+      <View style={styles.statsContainer}>
+        <View style={styles.statsRow}>
+          <View style={styles.statChip}>
+            <Text style={styles.statEmoji}>🌅</Text>
+            <Text style={styles.statText}>{mealCounts.breakfast}</Text>
+          </View>
+          <View style={styles.statChip}>
+            <Text style={styles.statEmoji}>☀️</Text>
+            <Text style={styles.statText}>{mealCounts.lunch}</Text>
+          </View>
+          <View style={styles.statChip}>
+            <Text style={styles.statEmoji}>🌙</Text>
+            <Text style={styles.statText}>{mealCounts.dinner}</Text>
+          </View>
+        </View>
+      </View>
+
+      {/* Filter Bar */}
+      <View style={styles.filterBar}>
+        {FILTER_OPTIONS.map((opt) => (
+          <TouchableOpacity
+            key={opt.value}
+            style={[styles.filterChip, filterType === opt.value && styles.filterChipActive]}
+            onPress={() => setFilterType(opt.value)}
+          >
+            <Text style={styles.filterEmoji}>{opt.emoji}</Text>
+            <Text style={[styles.filterText, filterType === opt.value && styles.filterTextActive]}>
+              {opt.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Bulk Actions */}
+      {selectionMode && (
+        <View style={styles.bulkActions}>
+          <TouchableOpacity style={styles.bulkBtn} onPress={selectAll}>
+            <Text style={styles.bulkBtnText}>Select All ({filteredItems.length})</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.bulkBtn} onPress={deselectAll}>
+            <Text style={styles.bulkBtnText}>Deselect All</Text>
+          </TouchableOpacity>
+          {selectedIds.size > 0 && (
+            <TouchableOpacity style={styles.bulkDeleteBtn} onPress={handleBulkDelete}>
+              <Text style={styles.bulkDeleteBtnText}>🗑 Delete ({selectedIds.size})</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
+
+      <ScrollView style={styles.list} contentContainerStyle={{ paddingBottom: 24 }}>
+        {filteredItems.map((item) => (
+          <TouchableOpacity
+            key={item.id}
+            style={[
+              styles.itemCard,
+              selectionMode && selectedIds.has(item.id) && styles.itemCardSelected,
+            ]}
+            onPress={() => selectionMode ? toggleSelectItem(item.id) : handleOpenEdit(item)}
+            activeOpacity={0.7}
+          >
+            {selectionMode && (
+              <View style={[styles.checkbox, selectedIds.has(item.id) && styles.checkboxChecked]}>
+                {selectedIds.has(item.id) && <Text style={styles.checkMark}>✓</Text>}
+              </View>
+            )}
             <View style={styles.itemInfo}>
-              <Text style={styles.itemName}>{item.name}</Text>
+              <View style={styles.itemNameRow}>
+                <Text style={styles.itemName}>{item.name}</Text>
+                {item.isCustom && (
+                  <View style={styles.customTag}>
+                    <Text style={styles.customTagText}>Custom</Text>
+                  </View>
+                )}
+              </View>
               <Text style={styles.itemMealTypes}>
-                {item.mealType.join(', ')}
+                {item.mealType.map((t) => t.charAt(0).toUpperCase() + t.slice(1)).join(' · ')}
               </Text>
               <Text style={styles.itemCategory}>{item.category}</Text>
             </View>
-            <View style={styles.itemActions}>
-              <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => handleOpenEdit(item)}
-                accessibilityLabel={`Edit ${item.name}`}
-                accessibilityHint="Opens a dialog to edit this food item"
-              >
-                <Text style={styles.editButtonText}>Edit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={() => handleDeleteItem(item.id, item.name)}
-                accessibilityLabel={`Delete ${item.name}`}
-                accessibilityHint="Asks for confirmation before deleting this food item"
-              >
-                <Text style={styles.deleteButtonText}>Delete</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+            {!selectionMode && (
+              <View style={styles.itemActions}>
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={() => handleOpenEdit(item)}
+                  accessibilityLabel={`Edit ${item.name}`}
+                  accessibilityHint="Opens a dialog to edit this food item"
+                >
+                  <Text style={styles.editButtonText}>✏️</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={() => handleDeleteItem(item.id, item.name)}
+                  accessibilityLabel={`Delete ${item.name}`}
+                  accessibilityHint="Asks for confirmation before deleting this food item"
+                >
+                  <Text style={styles.deleteButtonText}>🗑</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </TouchableOpacity>
         ))}
+        {filteredItems.length === 0 && (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyEmoji}>🍽️</Text>
+            <Text style={styles.emptyText}>No items found</Text>
+            <Text style={styles.emptyHint}>Try a different filter or add new items</Text>
+          </View>
+        )}
       </ScrollView>
 
       {/* Add Item Modal */}
@@ -225,23 +374,25 @@ export const ManageScreen: React.FC = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Add New Food Item</Text>
+            <Text style={styles.modalTitle}>➕ Add New Food Item</Text>
 
+            <Text style={styles.modalLabel}>Food Name</Text>
             <TextInput
               style={styles.input}
-              placeholder="Food name (e.g., Pav Bhaji)"
+              placeholder="e.g., Pav Bhaji"
               value={newItemName}
               onChangeText={setNewItemName}
             />
 
+            <Text style={styles.modalLabel}>Category</Text>
             <TextInput
               style={styles.input}
-              placeholder="Category (e.g., snack)"
+              placeholder="e.g., snack, curry, bread"
               value={category}
               onChangeText={setCategory}
             />
 
-            <Text style={styles.label}>Select meal types:</Text>
+            <Text style={styles.modalLabel}>Meal Types (multi-select)</Text>
             <View style={styles.mealTypeButtons}>
               {(['breakfast', 'lunch', 'dinner'] as MealType[]).map((type) => (
                 <TouchableOpacity
@@ -252,6 +403,9 @@ export const ManageScreen: React.FC = () => {
                   ]}
                   onPress={() => toggleMealType(type)}
                 >
+                  <Text style={styles.mealTypeEmoji}>
+                    {type === 'breakfast' ? '🌅' : type === 'lunch' ? '☀️' : '🌙'}
+                  </Text>
                   <Text
                     style={[
                       styles.mealTypeButtonText,
@@ -259,8 +413,11 @@ export const ManageScreen: React.FC = () => {
                         styles.mealTypeButtonTextSelected,
                     ]}
                   >
-                    {type}
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
                   </Text>
+                  {selectedMealTypes.includes(type) && (
+                    <Text style={styles.mealTypeCheck}>✓</Text>
+                  )}
                 </TouchableOpacity>
               ))}
             </View>
@@ -281,7 +438,7 @@ export const ManageScreen: React.FC = () => {
                 style={[styles.modalButton, styles.saveButton]}
                 onPress={handleAddItem}
               >
-                <Text style={styles.saveButtonText}>Add</Text>
+                <Text style={styles.saveButtonText}>Add Item</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -300,8 +457,9 @@ export const ManageScreen: React.FC = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Edit Food Item</Text>
+            <Text style={styles.modalTitle}>✏️ Edit Food Item</Text>
 
+            <Text style={styles.modalLabel}>Food Name</Text>
             <TextInput
               style={styles.input}
               placeholder="Food name"
@@ -309,14 +467,15 @@ export const ManageScreen: React.FC = () => {
               onChangeText={setEditName}
             />
 
+            <Text style={styles.modalLabel}>Category</Text>
             <TextInput
               style={styles.input}
-              placeholder="Category (e.g., snack)"
+              placeholder="e.g., snack, curry, bread"
               value={editCategory}
               onChangeText={setEditCategory}
             />
 
-            <Text style={styles.label}>Select meal types:</Text>
+            <Text style={styles.modalLabel}>Meal Types (multi-select)</Text>
             <View style={styles.mealTypeButtons}>
               {(['breakfast', 'lunch', 'dinner'] as MealType[]).map((type) => (
                 <TouchableOpacity
@@ -327,6 +486,9 @@ export const ManageScreen: React.FC = () => {
                   ]}
                   onPress={() => toggleEditMealType(type)}
                 >
+                  <Text style={styles.mealTypeEmoji}>
+                    {type === 'breakfast' ? '🌅' : type === 'lunch' ? '☀️' : '🌙'}
+                  </Text>
                   <Text
                     style={[
                       styles.mealTypeButtonText,
@@ -334,8 +496,11 @@ export const ManageScreen: React.FC = () => {
                         styles.mealTypeButtonTextSelected,
                     ]}
                   >
-                    {type}
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
                   </Text>
+                  {editMealTypes.includes(type) && (
+                    <Text style={styles.mealTypeCheck}>✓</Text>
+                  )}
                 </TouchableOpacity>
               ))}
             </View>
@@ -354,7 +519,7 @@ export const ManageScreen: React.FC = () => {
                 style={[styles.modalButton, styles.saveButton]}
                 onPress={handleEditItem}
               >
-                <Text style={styles.saveButtonText}>Save</Text>
+                <Text style={styles.saveButtonText}>Save Changes</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -364,66 +529,162 @@ export const ManageScreen: React.FC = () => {
   );
 };
 
+const PRIMARY = '#FF6B35';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#FAFAFA',
   },
   header: {
-    backgroundColor: '#FF6B35',
+    backgroundColor: PRIMARY,
     padding: 20,
-    paddingTop: 40,
+    paddingTop: 48,
+    paddingBottom: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+  },
+  headerLeft: {
+    flex: 1,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
+    marginBottom: 2,
+  },
+  headerSubtitle: {
+    fontSize: 13,
+    color: '#fff',
+    opacity: 0.85,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  headerBtn: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  headerBtnActive: {
+    backgroundColor: '#fff',
+  },
+  headerBtnText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 13,
+  },
+  headerBtnTextActive: {
+    color: PRIMARY,
   },
   addButton: {
     backgroundColor: '#fff',
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
     paddingVertical: 8,
-    borderRadius: 8,
+    borderRadius: 20,
   },
   addButtonText: {
-    color: '#FF6B35',
+    color: PRIMARY,
     fontWeight: 'bold',
+    fontSize: 13,
   },
   statsContainer: {
-    backgroundColor: '#fff',
     marginHorizontal: 16,
     marginTop: 16,
-    padding: 16,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  statsTotal: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 8,
   },
   statsRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    gap: 10,
+  },
+  statChip: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    padding: 12,
+    borderRadius: 14,
+    gap: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  statEmoji: {
+    fontSize: 18,
+  },
+  statText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  filterBar: {
+    flexDirection: 'row',
+    marginHorizontal: 16,
+    marginTop: 12,
     gap: 8,
   },
-  statsBadge: {
-    fontSize: 13,
-    color: '#555',
-    backgroundColor: '#FFF5F3',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+  filterChip: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#FFD5C8',
+    backgroundColor: '#fff',
+    gap: 4,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  filterChipActive: {
+    borderColor: PRIMARY,
+    backgroundColor: '#FFF5F3',
+  },
+  filterEmoji: {
+    fontSize: 14,
+  },
+  filterText: {
+    fontSize: 13,
+    color: '#666',
+    fontWeight: '600',
+  },
+  filterTextActive: {
+    color: PRIMARY,
+  },
+  bulkActions: {
+    flexDirection: 'row',
+    marginHorizontal: 16,
+    marginTop: 12,
+    gap: 8,
+    flexWrap: 'wrap',
+  },
+  bulkBtn: {
+    backgroundColor: '#E3F2FD',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  bulkBtnText: {
+    color: '#1565C0',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  bulkDeleteBtn: {
+    backgroundColor: '#FFEBEE',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  bulkDeleteBtnText: {
+    color: '#C62828',
+    fontSize: 13,
+    fontWeight: '600',
   },
   list: {
     flex: 1,
@@ -432,36 +693,76 @@ const styles = StyleSheet.create({
   itemCard: {
     backgroundColor: '#fff',
     marginHorizontal: 16,
-    marginVertical: 8,
+    marginVertical: 5,
     padding: 16,
-    borderRadius: 12,
+    borderRadius: 14,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 2,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  itemCardSelected: {
+    borderColor: PRIMARY,
+    backgroundColor: '#FFF5F3',
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#CCC',
+    marginRight: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkboxChecked: {
+    backgroundColor: PRIMARY,
+    borderColor: PRIMARY,
+  },
+  checkMark: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   itemInfo: {
     flex: 1,
+  },
+  itemNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 4,
   },
   itemName: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 4,
+  },
+  customTag: {
+    backgroundColor: '#E8F5E9',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  customTagText: {
+    color: '#2E7D32',
+    fontSize: 10,
+    fontWeight: '700',
   },
   itemMealTypes: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#666',
-    textTransform: 'capitalize',
     marginBottom: 2,
   },
   itemCategory: {
     fontSize: 12,
     color: '#999',
+    textTransform: 'capitalize',
   },
   itemActions: {
     flexDirection: 'row',
@@ -469,26 +770,40 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   editButton: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#E3F2FD',
     paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
+    paddingVertical: 8,
+    borderRadius: 10,
   },
   editButtonText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
+    fontSize: 16,
   },
   deleteButton: {
-    backgroundColor: '#f44336',
+    backgroundColor: '#FFEBEE',
     paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
+    paddingVertical: 8,
+    borderRadius: 10,
   },
   deleteButtonText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  emptyState: {
+    alignItems: 'center',
+    paddingVertical: 48,
+  },
+  emptyEmoji: {
+    fontSize: 48,
+    marginBottom: 12,
+  },
+  emptyText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#666',
+  },
+  emptyHint: {
+    fontSize: 14,
+    color: '#999',
+    marginTop: 4,
   },
   modalContainer: {
     flex: 1,
@@ -498,10 +813,10 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: '#fff',
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 24,
     width: '90%',
-    maxWidth: 400,
+    maxWidth: 420,
   },
   modalTitle: {
     fontSize: 20,
@@ -509,61 +824,71 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#333',
   },
+  modalLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#555',
+    marginBottom: 6,
+  },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
+    borderColor: '#E0E0E0',
+    borderRadius: 12,
+    padding: 14,
     marginBottom: 16,
-    fontSize: 16,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 12,
-    color: '#333',
+    fontSize: 15,
+    backgroundColor: '#FAFAFA',
   },
   mealTypeButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 24,
+    gap: 8,
   },
   mealTypeButton: {
     flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderRadius: 12,
     borderWidth: 2,
-    borderColor: '#ddd',
-    marginHorizontal: 4,
+    borderColor: '#E0E0E0',
     alignItems: 'center',
+    gap: 4,
   },
   mealTypeButtonSelected: {
-    borderColor: '#FF6B35',
+    borderColor: PRIMARY,
     backgroundColor: '#FFF5F3',
   },
+  mealTypeEmoji: {
+    fontSize: 18,
+  },
   mealTypeButtonText: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#666',
-    textTransform: 'capitalize',
+    fontWeight: '500',
   },
   mealTypeButtonTextSelected: {
-    color: '#FF6B35',
+    color: PRIMARY,
+    fontWeight: 'bold',
+  },
+  mealTypeCheck: {
+    color: PRIMARY,
+    fontSize: 14,
     fontWeight: 'bold',
   },
   modalButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: 12,
   },
   modalButton: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginHorizontal: 4,
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: 'center',
   },
   cancelButton: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F5F5F5',
   },
   cancelButtonText: {
     color: '#666',
