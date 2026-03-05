@@ -94,6 +94,17 @@ export class StorageService {
     }
   }
 
+  static async deleteMealHistoryItems(ids: Set<string>): Promise<void> {
+    try {
+      const history = await this.getMealHistory();
+      const remaining = history.filter((m) => !ids.has(m.id));
+      await AsyncStorage.setItem(MEAL_HISTORY_KEY, JSON.stringify(remaining));
+    } catch (error) {
+      console.error('Error deleting meal history items:', error);
+      throw error;
+    }
+  }
+
   // ── User Profile ─────────────────────────────────────────────────────────
 
   static async getUserProfile(): Promise<UserProfile | null> {
